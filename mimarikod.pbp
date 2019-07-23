@@ -1,0 +1,146 @@
+DEFINE LCD_DREG PORTB
+DEFINE LCD_DBIT 4
+DEFINE LCD_RSREG PORTB
+DEFINE LCD_RSBIT 2
+DEFINE LCD_EREG PORTB
+DEFINE LCD_EBIT 3
+DEFINE LCD_BITS 4
+pause 100
+a var portd.4
+b var portd.5
+c var portd.6
+d var portd.7
+bir var portd.0
+iki var portd.1
+uc var portd.2
+dort var portd.3
+anahtar var byte
+op var byte
+res var word
+num var word
+res=0
+num=0
+op=0
+trisd=%00001111
+portd=255
+lcdout $fe,1
+lcdout $fe,2,"Hesap Makinasi"
+pause 1000
+lcdout $fe,1
+lcdout $fe,2
+anahtars:
+high d
+low a
+if bir=0 then anahtar=7:goto arr
+if iki=0 then anahtar=4:goto arr
+if uc=0 then anahtar=1:goto arr
+if dort=0 then anahtar=10:goto arr
+high a
+low b
+if bir=0 then anahtar=8:goto arr
+if iki=0 then anahtar=5:goto arr
+if uc=0 then anahtar=2:goto arr
+if dort=0 then anahtar=0:goto arr
+high b
+low c
+if bir=0 then anahtar=9:goto arr
+if iki=0 then anahtar=6:goto arr
+if uc=0 then anahtar=3:goto arr
+if dort=0 then anahtar=11:goto arr
+high c
+low d
+if bir=0 then anahtar=12:goto arr
+if iki=0 then anahtar=13:goto arr
+if uc=0 then anahtar=14:goto arr
+if dort=0 then anahtar=15:goto arr
+pause 10
+goto anahtars
+arr:
+if bir=0 then arr
+if iki=0 then arr
+if uc=0 then arr
+if dort=0 then arr
+pause 100
+if anahtar=10 then
+lcdout $fe,1
+lcdout$fe,2
+op=0
+res=0
+num=0
+goto anahtars
+endif
+if anahtar=11 then
+if (op=0) then res=num
+if (op=1) then res=res+num
+if (op=2) then res=res-num
+if (op=3) then res=res*num
+if (op=4) then res=res/num
+lcdout $fe,$c0,dec res
+op=5
+num=0
+goto anahtars
+endif
+if anahtar=12 then
+if (op=5) then
+lcdout $fe,1
+lcdout $fe,2,dec res
+endif
+lcdout $fd
+if (op=0) then res=num
+if (op=1) then res=res+num
+if (op=2) then res=res-num
+if (op=3) then res=res*num
+if (op=4) then res=res/num
+op=4
+num=0
+goto anahtars
+endif
+if anahtar=13 then
+if (op=5) then
+lcdout $fe,1
+lcdout $fe,2,dec res
+endif
+lcdout "x"
+if (op=0) then res=num
+if (op=1) then res=res+num
+if (op=2) then res=res-num
+if (op=3) then res=res*num
+if (op=4) then res=res/num
+op=3
+num=0
+goto anahtars
+endif
+if anahtar=14 then
+if (op=5) then
+lcdout $fe,1
+lcdout $fe,2,dec res
+endif
+lcdout "-"
+if (op=0) then res=num
+if (op=1) then res=res+num
+if (op=2) then res=res-num
+if (op=3) then res=res*num
+if (op=4) then res=res/num
+op=2
+num=0
+goto anahtars
+endif
+if anahtar=15 then
+if (op=5) then
+lcdout $fe,1
+lcdout $fe,2,dec res
+endif
+lcdout "+"
+if (op=0) then res=num
+if (op=1) then res=res+num
+if (op=2) then res=res-num
+if (op=3) then res=res*num
+if (op=4) then res=res/num
+op=1
+num=0
+goto anahtars
+endif
+lcdout dec anahtar
+num=num*10+anahtar
+goto anahtars
+end
